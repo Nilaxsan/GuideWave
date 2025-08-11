@@ -2,12 +2,13 @@ import { TextField, Button, CircularProgress } from "@mui/material";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import CustomCard from "../components/Auth/CustomCard";
 import { useState } from "react";
-import {  z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { forgotPassword } from "../services/authService";
 
 interface FormValues {
   email: string;
@@ -34,20 +35,20 @@ const ForgotPassword = () => {
   });
   const onSubmit = async (data: any) => {
     setIsLoading(true);
-try {
-      const response = await axios.post("https://localhost:7015/api/Auth/forgot-password", data);
-      console.log(response.data);
+    try {
+      const response = await forgotPassword(data);
+      console.log(response);
       toast.success("OTP sent to your email");
       setIsLoading(false);
       navigate("/verify-otp");
     } catch (error) {
-       setIsLoading(false);
-       if (axios.isAxiosError(error) && error.response) {
-         toast.error(error.response.data.message);
-       } else {
-         toast.error("An unexpected error occurred");
-       }
-    }    
+      setIsLoading(false);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

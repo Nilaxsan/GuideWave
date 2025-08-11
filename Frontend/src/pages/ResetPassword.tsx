@@ -1,5 +1,5 @@
 import { TextField, Button, CircularProgress, IconButton } from "@mui/material";
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import CustomCard from "../components/Auth/CustomCard";
 import { useState } from "react";
 import { z } from "zod";
@@ -9,17 +9,18 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { resetPassword } from "../services/authService";
 
 interface FormValues {
   newpassword: string;
 }
 
 const initialState: FormValues = {
-    newpassword: "",
+  newpassword: "",
 };
 
 const schemaReset = z.object({
-    newpassword: z.string().min(1, "password is required"),
+  newpassword: z.string().min(1, "password is required"),
 });
 const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,11 +39,8 @@ const ResetPassword = () => {
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://localhost:7015/api/Auth/reset-password",
-        data
-      );
-      console.log(response.data);
+      const response = await resetPassword(data);
+      console.log(response);
       toast.success("Password reset successfully");
       setIsLoading(false);
       navigate("/");

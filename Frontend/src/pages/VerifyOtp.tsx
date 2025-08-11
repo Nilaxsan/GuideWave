@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { verifyOtp } from "../services/authService";
 
 interface FormValues {
   otp: string;
@@ -35,8 +36,8 @@ const VerifyOtp = () => {
   const onSubmit = async (data: any) => {
     setIsLoading(true);
 try {
-      const response = await axios.post("https://localhost:7015/api/Auth/verify-otp", data);
-      console.log(response.data);
+      const response = await verifyOtp(data);
+      console.log(response);
       toast.success("Otp verified successfully");
       setIsLoading(false);
       navigate("/reset-password");
