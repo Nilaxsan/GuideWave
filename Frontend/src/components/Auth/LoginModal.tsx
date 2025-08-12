@@ -95,9 +95,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
       // Redirect to the appropriate home page
       if (decodedToken.role === "Guide") {
-        navigate("/guide-home");
+        navigate("/guide/home");
       } else {
-        navigate("/tourist-home");
+        navigate("/tourist/home");
       }
 
     } catch (error: any) {

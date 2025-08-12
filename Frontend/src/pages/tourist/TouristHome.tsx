@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import { Box, Typography,Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +13,6 @@ const TouristHome: React.FC = () => {
       
   return (
     <Box>
-      {/* <Navbar /> */}
       <Typography variant="h4">Tourist Home</Typography>
     <Button
         variant="contained"
