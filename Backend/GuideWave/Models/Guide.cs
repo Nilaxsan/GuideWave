@@ -1,22 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿    using System.ComponentModel.DataAnnotations;
 
-namespace GuideWave.Models
-{
-    public class Guide 
+    namespace GuideWave.Models
     {
-        [Key]
-        public int UserId { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Role { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Experience { get; set; }
-        public string Location { get; set; }
-        public string Profile { get; set; }
-        public string Otp { get; set; }
-        public bool IsEmailVerified { get; set; } = false;
-        public string? EmailVerificationToken { get; set; }
+        public class Guide 
+        {
+            [Key]
+            public int UserId { get; set; }
+            public string FullName { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public string Role { get; set; }
+            public string PhoneNumber { get; set; }
+            public string Experience { get; set; }
+            public string Location { get; set; }
+            public string Profile { get; set; }
+            public string Otp { get; set; }
+            public bool IsEmailVerified { get; set; } = false;
+            public string? EmailVerificationToken { get; set; }
+
+        // Navigation property - One Guide can have many Places
+        public ICollection<Place> Places { get; set; } = new List<Place>();
 
     }
-}
+    }

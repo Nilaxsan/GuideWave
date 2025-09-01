@@ -1,6 +1,7 @@
 ﻿using GuideWave.Data;
 using GuideWave.Models;
 using GuideWave.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuideWave.Repository
 {
@@ -16,9 +17,15 @@ namespace GuideWave.Repository
 
         public async Task Update(Place enitiy)
         {
-            _dbContext.Places.Update(enitiy);
-
             await _dbContext.SaveChangesAsync();
+
         }
+        public async Task<IEnumerable<Place>> GetPlacesByGuide(int guideId)
+        {
+            return await _dbContext.Places
+                .Where(p => p.GuideId == guideId)
+                .ToListAsync();
+        }
+
     }
 }

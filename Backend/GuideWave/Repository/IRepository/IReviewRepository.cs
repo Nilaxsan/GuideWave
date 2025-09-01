@@ -6,6 +6,9 @@ namespace GuideWave.Repository.IRepository
     public interface IReviewRepository : IGenericRepository<Review>
     {
         Task Update(Review enitiy);
+        Task<IEnumerable<Review>> GetByGuideId(int guideId);
+
 
     }
+
 }

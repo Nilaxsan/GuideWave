@@ -69,16 +69,31 @@ namespace GuideWave.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-
         public async Task<ActionResult<CreateReviewDto>> Create([FromBody] CreateReviewDto reviewDto)
         {
-           
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var review = _mapper.Map<Review>(reviewDto);  
+            var review = _mapper.Map<Review>(reviewDto);
+            review.Timestamp = DateTime.UtcNow; // set current time
+
             await _reviewRepository.Create(review);
-            return CreatedAtAction("GetById", new { id = review.ReviewId }, review);
 
+            return CreatedAtAction("GetById", new { id = review.ReviewId }, review);
         }
+        [HttpGet("ByGuide/{guideId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Review>>> GetByGuideId(int guideId)
+        {
+            var reviews = await _reviewRepository.GetByGuideId(guideId);
+
+            if (reviews == null || !reviews.Any())
+                return NotFound($"No reviews found for GuideId {guideId}");
+
+            return Ok(reviews);
+        }
+
 
 
         [HttpPut("{id:int}")]

@@ -8,7 +8,7 @@ export const countries = [
   { name: "Germany", code: "DE" },
   { name: "France", code: "FR" },
   { name: "Japan", code: "JP" },
-  { name: "China", code: "CN" },
+  { name: "China", code: "CN" },  
   { name: "Brazil", code: "BR" },
   { name: "Mexico", code: "MX" },
   { name: "South Korea", code: "KR" },
