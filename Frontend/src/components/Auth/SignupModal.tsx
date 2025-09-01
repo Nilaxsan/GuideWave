@@ -23,7 +23,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Close, Visibility, VisibilityOff } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { countries, districts,experiences } from "../data/data";
+import { countries, districts, experiences } from "../data/data";
+import { HOST_URL } from "../../services/api";
 
 //common form values
 interface FormValues {
@@ -54,6 +55,16 @@ const schemaTourist = z.object({
   fullName: z.string().min(1, "Full Name is required"),
   email: z.string().min(1, "Email is required").email("Enter a valid email"),
   password: z.string().min(4, "Password must be at least 4 characters"),
+    // password: z
+  //   .string()
+  //   .min(8, "Password must have at least 8 characters")
+  //   .regex(/[0-9]/, "Password must contain at least one number")
+  //   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  //   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  //   .regex(
+  //     /[^a-zA-Z0-9]/,
+  //     "Password must contain at least one special character"
+  //   ),
   phoneNumber: z.string().min(1, "Phone Number is required"),
   profile: z.string().min(1, "Profile is required"),
   role: z.enum(["tourist", "guide"]),
@@ -96,9 +107,9 @@ const SignupModal: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       // Determine API endpoint based on role
       if (role === "tourist") {
-        apiEndpoint = "https://localhost:7015/api/Tourists";
+        apiEndpoint = `${HOST_URL}/Tourists`;
       } else if (role === "guide") {
-        apiEndpoint = "https://localhost:7015/api/Guide";
+        apiEndpoint = `${HOST_URL}/Guide`;
       }
 
       // Make API request using axiosx
@@ -286,17 +297,19 @@ const SignupModal: React.FC<{ open: boolean; onClose: () => void }> = ({
           </TextField>
         ) : (
           <>
-            <TextField select label="Experience" fullWidth
+            <TextField
+              select
+              label="Experience"
+              fullWidth
               {...register("experience")}
               error={!!errors.experience}
               helperText={errors.experience?.message}
-              >
+            >
               {experiences.map((experience) => (
                 <MenuItem key={experience} value={experience}>
                   {experience}
                 </MenuItem>
               ))}
-
             </TextField>
             <TextField
               select

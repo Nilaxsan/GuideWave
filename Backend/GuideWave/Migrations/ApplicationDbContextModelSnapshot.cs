@@ -82,6 +82,9 @@ namespace GuideWave.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GuideId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -89,6 +92,8 @@ namespace GuideWave.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PlaceId");
+
+                    b.HasIndex("GuideId");
 
                     b.ToTable("Places");
                 });
@@ -104,13 +109,23 @@ namespace GuideWave.Migrations
                     b.Property<string>("Feedback")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GuideId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Ratings")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("TouristId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReviewId");
+
+                    b.HasIndex("GuideId");
+
+                    b.HasIndex("TouristId");
 
                     b.ToTable("Reviews");
                 });
@@ -156,6 +171,41 @@ namespace GuideWave.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Tourists");
+                });
+
+            modelBuilder.Entity("GuideWave.Models.Place", b =>
+                {
+                    b.HasOne("GuideWave.Models.Guide", "Guide")
+                        .WithMany("Places")
+                        .HasForeignKey("GuideId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Guide");
+                });
+
+            modelBuilder.Entity("GuideWave.Models.Review", b =>
+                {
+                    b.HasOne("GuideWave.Models.Guide", "Guide")
+                        .WithMany()
+                        .HasForeignKey("GuideId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GuideWave.Models.Tourists", "Tourist")
+                        .WithMany()
+                        .HasForeignKey("TouristId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Guide");
+
+                    b.Navigation("Tourist");
+                });
+
+            modelBuilder.Entity("GuideWave.Models.Guide", b =>
+                {
+                    b.Navigation("Places");
                 });
 #pragma warning restore 612, 618
         }

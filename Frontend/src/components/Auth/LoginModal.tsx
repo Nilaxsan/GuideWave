@@ -11,10 +11,10 @@ import {
   Link,
   MenuItem,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
-import Visibility from "@mui/icons-material/Visibility"; // Import Visibility icon
-import VisibilityOff from "@mui/icons-material/VisibilityOff"; // Import VisibilityOff icon
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"; // Import LockOutlinedIcon
+import CloseIcon from "@mui/icons-material/Close"; 
+import Visibility from "@mui/icons-material/Visibility"; 
+import VisibilityOff from "@mui/icons-material/VisibilityOff"; 
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"; 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { Link as RouterLink ,useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { HOST_URL } from "../../services/api";
 
 interface LoginModalProps {
   open: boolean;
@@ -76,8 +77,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     try {
       const endpoint =
         data.role === "Guide"
-          ? "https://localhost:7015/api/Guide/login"
-          : "https://localhost:7015/api/Tourists/login";
+          ? `${HOST_URL}/Guide/login`
+          : `${HOST_URL}/Tourists/login`;
       const response = await axios.post(endpoint, {
         email: data.email,
         password: data.password,
@@ -94,9 +95,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
       // Redirect to the appropriate home page
       if (decodedToken.role === "Guide") {
-        navigate("/guide-home");
+        navigate("/guide/home");
       } else {
-        navigate("/tourist-home");
+        navigate("/tourist/home");
       }
 
     } catch (error: any) {

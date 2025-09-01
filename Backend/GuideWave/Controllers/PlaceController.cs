@@ -62,25 +62,39 @@ namespace GuideWave.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-
-        public async Task<ActionResult<CreatePlaceDto>> Create([FromBody] CreatePlaceDto createplaceDto)
+        public async Task<ActionResult<CreatePlaceDto>> Create([FromBody] CreatePlaceDto createPlaceDto)
         {
-            var result = _placeRepository.IsRecordsExists(x => x.PlaceName == createplaceDto.PlaceName);
+            var result = _placeRepository.IsRecordsExists(x => x.PlaceName == createPlaceDto.PlaceName && x.GuideId == createPlaceDto.GuideId);
             if (result)
             {
-
-                return Conflict("Place is  already exists in database  for you");
+                return Conflict("This place already exists for this guide.");
             }
 
-
-            var place = _mapper.Map<Place>(createplaceDto);
-
+            var place = _mapper.Map<Place>(createPlaceDto);
 
             await _placeRepository.Create(place);
-            return CreatedAtAction("GetById", new { id = place.PlaceId }, place );
-
+            return CreatedAtAction("GetById", new { id = place.PlaceId }, place);
         }
 
+
+
+        //[HttpPut("{id:int}")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<ActionResult<Place>> Update(int id, [FromBody] PlaceDto placeDto)
+        //{
+        //    if (placeDto == null || id != placeDto.PlaceId)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var place = _mapper.Map<Place>(placeDto);
+
+        //    await _placeRepository.Update(place);
+        //    return NoContent();
+
+        //}
 
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -93,12 +107,38 @@ namespace GuideWave.Controllers
                 return BadRequest();
             }
 
-            var place = _mapper.Map<Place>(placeDto);
+            var existingPlace = await _placeRepository.Get(id);
+            if (existingPlace == null)
+            {
+                return NotFound();
+            }
 
-            await _placeRepository.Update(place);
+            // map onto the tracked entity
+            _mapper.Map(placeDto, existingPlace);
+
+            await _placeRepository.Update(existingPlace);
+
             return NoContent();
-
         }
+
+        [HttpGet("guide/{guideId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult<IEnumerable<PlaceDto>>> GetPlacesByGuide(int guideId)
+        {
+            var places = await _placeRepository.GetAll();
+            var guidePlaces = places.Where(p => p.GuideId == guideId);
+
+            var placesDto = _mapper.Map<List<PlaceDto>>(guidePlaces);
+
+            if (!placesDto.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(placesDto);
+        }
+
 
 
         [HttpDelete("{id:int}")]
